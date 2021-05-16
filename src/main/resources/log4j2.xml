@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="info">
+	<Properties>
+		<Property name="pattn" value="[%d{HH:mm:ss}] [%t/%level] [%logger]: %msg%n" />
+	</Properties>
+	
+	<Appenders>
+		
+		<Console name="SysOut" target="SYSTEM_OUT">
+			<PatternLayout pattern="${pattn}"/>
+		</Console>
+		
+		<RollingRandomAccessFile name="Normal" fileName="logs/latest.log" filePattern="logs/%d{yyyy-MM-dd}-%i.log.gz">
+			<PatternLayout pattern="${pattn}"/>
+			<Policies>
+				<!-- for users who rarely shut down  -->
+				<TimeBasedTriggeringPolicy/>
+				<OnStartupTriggeringPolicy/>
+			</Policies>
+		</RollingRandomAccessFile>
+		
+		<!-- should not include date to the archive file name as roll-over won't take place -->
+		<RollingRandomAccessFile name="Detailed" fileName="logs/debug.log" filePattern="logs/debug-%i.log.gz">
+			<PatternLayout pattern="${pattn}"/>
+			<Policies>
+				<OnStartupTriggeringPolicy/>
+				<SizeBasedTriggeringPolicy size="200MB"/>
+			</Policies>
+			<DefaultRolloverStrategy max="4" fileIndex="min"/>
+		</RollingRandomAccessFile>
+	</Appenders>
+	
+	<Loggers>
+		<Root level="all">
+			<AppenderRef ref="SysOut" level="debug"/>
+			<AppenderRef ref="Normal" level="info"/>
+			<AppenderRef ref="Detailed" level="debug"/>
+		</Root>
+	</Loggers>
+</Configuration>
