@@ -109,6 +109,7 @@ public class FuzzyDate implements Cloneable {
 			LocalDateTime now = TimeDateUtil.getCurrentDateTime();
 			int year = now.getYear();
 			// EnumMonth month
+<<<<<<< HEAD
 			LocalDateTime nnow = LocalDateTime.of(year, now.getMonth(), 1, 0, 0);
 			LocalDateTime cand = LocalDateTime.of(year, month.getIndex(), 1, 0, 0);
 			if (cand.isBefore(nnow)) { year++; }
@@ -206,6 +207,104 @@ public class FuzzyDate implements Cloneable {
 		}
 		this.time = time;
 		this.updateDayOfWeek();
+=======
+			LocalDateTime nnow = LocalDateTime.of(year, now.getMonth(), 0, 0, 0);
+			LocalDateTime cand = LocalDateTime.of(year, month.getIndex(), 0, 0, 0);
+			if (cand.isBefore(nnow)) { year++; }
+			this.year = year;
+		}
+		this.updateDayOfWeek();
+		return true;
+	}
+	public void clearMonth() {
+		this.month = EnumMonth.NONE;
+		this.clearDay();
+	}
+	
+	public boolean hasDay() { return this.getDay() > 0; }
+	public int getDay() { return day; }
+	public boolean setDay(int day) {
+		if (day <= 0 || day > 31) {
+			return false;
+		}
+		LocalDateTime now = TimeDateUtil.getCurrentDateTime();
+		if (this.hasMonth()) {
+			if (day > Month.of(this.getMonth().getIndex()).length(Year.isLeap(2000 + this.getYear()))) {
+				return false;
+			}
+			this.day = day;
+		} else {
+			int year = this.hasYear() ? 2000 + this.getYear() : now.getYear(); // 仮？
+			Month month = now.getMonth(); // 仮
+			if (day > month.length(Year.isLeap(year))) { // Never be true in December.
+				month = month.plus(1);
+			}
+			LocalDateTime nnow = LocalDateTime.of(year, month, now.getDayOfMonth(), 0, 0);
+			LocalDateTime cand = LocalDateTime.of(year, month, day, 0, 0);
+			if (cand.isBefore(nnow)) {
+				month = month.plus(1);
+				if (month == Month.JANUARY) {
+					if (year != now.getYear()) return false;
+					year++;
+				}
+				if (day > month.length(Year.isLeap(year))) {
+					month = month.plus(1);
+				}
+			}
+			this.year = year;
+			this.month = EnumMonth.fromMonth(month);
+			this.day = day;
+		}
+		this.updateDayOfWeek();
+		return true;
+	}
+	public void clearDay() {
+		this.day = -1;
+		this.dayofweek = null;
+		this.clearTime();
+	}
+	
+	private void updateDayOfWeek() {
+		if (!this.hasDay()) return;
+		this.dayofweek = TimeDateUtil.getCurrentDateTime().withYear(this.getYear()).withMonth(this.getMonth().getIndex()).withDayOfMonth(this.getDay()).getDayOfWeek();
+	}
+	
+	public String getDayOfWeekString() {
+		return TimeDateUtil.dayOfWeekString(this.dayofweek);
+	}
+	
+	public boolean hasTime() { return this.getTime() >= 0; }
+	public int getTime() { return this.time; }
+	public boolean setTime(int time) {
+		if (time < 0) { return false; }
+		int hour = time / 100;
+		int min = time % 100;
+		if (hour < 0 || hour >= 24 || min < 0 || min >= 60) { return false; }
+		if (!this.hasDay()) {
+			LocalDateTime now = TimeDateUtil.getCurrentDateTime();
+			int year = this.hasYear() ? 2000 + this.getYear() : now.getYear();
+			EnumMonth month = this.hasMonth() ? this.getMonth() : EnumMonth.fromIndex(now.getMonthValue());
+			int day = this.hasDay() ? this.getDay() : now.getDayOfMonth();
+			LocalDateTime nnow = LocalDateTime.of(year, month.getMonth(), now.getDayOfMonth(), now.getHour(), now.getMinute());
+			LocalDateTime cand = LocalDateTime.of(year, month.getMonth(), day, hour, min);
+			if (cand.isBefore(nnow)) {
+				day++;
+				if (day > month.length(year)) {
+					day = 1;
+					if (month.getMonth() != now.getMonth()) { return false; }
+					month = month.getNext();
+					if (month == EnumMonth.JAN) {
+						if (year != now.getYear()) { return false; }
+						year++;
+					}
+				}
+			}
+			this.year = year;
+			this.month = month;
+			this.day = day;
+		}
+		this.time = time;
+>>>>>>> branch 'master' of https://github.com/TatsunoriOiwa/ScheduleManager.git
 		return true;
 	}
 	public void clearTime() { this.time = -1; }
