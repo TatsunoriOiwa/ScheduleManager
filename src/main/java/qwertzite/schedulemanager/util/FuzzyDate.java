@@ -109,8 +109,8 @@ public class FuzzyDate implements Cloneable {
 			LocalDateTime now = TimeDateUtil.getCurrentDateTime();
 			int year = now.getYear();
 			// EnumMonth month
-			LocalDateTime nnow = LocalDateTime.of(year, now.getMonth(), 0, 0, 0);
-			LocalDateTime cand = LocalDateTime.of(year, month.getIndex(), 0, 0, 0);
+			LocalDateTime nnow = LocalDateTime.of(year, now.getMonth(), 1, 0, 0);
+			LocalDateTime cand = LocalDateTime.of(year, month.getIndex(), 1, 0, 0);
 			if (cand.isBefore(nnow)) { year++; }
 			this.year = year;
 		}
@@ -205,6 +205,7 @@ public class FuzzyDate implements Cloneable {
 			this.day = day;
 		}
 		this.time = time;
+		this.updateDayOfWeek();
 		return true;
 	}
 	public void clearTime() { this.time = -1; }
