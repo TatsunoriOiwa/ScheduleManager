@@ -1,0 +1,1 @@
+cmd /k java -jar ./ScheduleManager-2.2.1.jar
