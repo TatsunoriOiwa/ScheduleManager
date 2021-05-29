@@ -336,6 +336,7 @@ public class PaneScheduleList extends Composite {
 		this.listViewer.insert(e, pos);
 		this.listViewer.setFilters(filters);
 		this.listViewer.setSelection(new StructuredSelection(e));
+		this.listViewer.reveal(e);
 		
 	}
 	
@@ -351,6 +352,7 @@ public class PaneScheduleList extends Composite {
 		this.listViewer.insert(entry, newPos);
 		this.listViewer.setFilters(filters);
 		this.listViewer.setSelection(new StructuredSelection(entry));
+		this.listViewer.reveal(entry);
 		this.btnNormalise.setEnabled(entry.isOutOfOrder());
 	}
 	
@@ -361,6 +363,10 @@ public class PaneScheduleList extends Composite {
 	
 	public void mirrorFilter(ScheduleFilter filter) {
 		this.listViewer.setFilters(filter);
+		ScheduleEntry entry = ScheduleManager.INSTANCE.getSelection();
+		if (entry != null) {
+			this.listViewer.reveal(entry);
+		}
 	}
 	
 	public void mirrorSynchStat() {
