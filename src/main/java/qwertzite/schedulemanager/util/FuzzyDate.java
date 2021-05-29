@@ -109,7 +109,6 @@ public class FuzzyDate implements Cloneable {
 			LocalDateTime now = TimeDateUtil.getCurrentDateTime();
 			int year = now.getYear();
 			// EnumMonth month
-//<<<<<<< HEAD
 			LocalDateTime nnow = LocalDateTime.of(year, now.getMonth(), 1, 0, 0);
 			LocalDateTime cand = LocalDateTime.of(year, month.getIndex(), 1, 0, 0);
 			if (cand.isBefore(nnow)) { year++; }

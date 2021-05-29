@@ -60,6 +60,8 @@ public class PaneScheduleList extends Composite {
 	private Label lblLastSynch;
 	private Label lblLastBackup;
 	private Button btnNormalise;
+	
+	private boolean ignoreListEvent;
 
 	/**
 	 * Create the composite.
@@ -260,7 +262,7 @@ public class PaneScheduleList extends Composite {
 //	}
 	
 	private void onSelectionChanged(SelectionChangedEvent event) {
-		ScheduleManager.INSTANCE.onSelectionChanged((ScheduleEntry) event.getStructuredSelection().getFirstElement());
+		if (!this.ignoreListEvent) ScheduleManager.INSTANCE.onSelectionChanged((ScheduleEntry) event.getStructuredSelection().getFirstElement());
 	}
 	
 	private void onInsert(SelectionEvent event) {
@@ -346,6 +348,7 @@ public class PaneScheduleList extends Composite {
 	}
 	
 	public void mirrorEntryMove(ScheduleEntry entry, int newPos) {
+		this.ignoreListEvent = true;
 		ViewerFilter[] filters = this.listViewer.getFilters();
 		this.listViewer.resetFilters();
 		this.listViewer.remove(entry);
@@ -354,6 +357,7 @@ public class PaneScheduleList extends Composite {
 		this.listViewer.setSelection(new StructuredSelection(entry));
 		this.listViewer.reveal(entry);
 		this.btnNormalise.setEnabled(entry.isOutOfOrder());
+		this.ignoreListEvent = false;
 	}
 	
 	public void mirrorEntryDone(ScheduleEntry entry) {
