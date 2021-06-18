@@ -244,5 +244,4 @@ public class ScheduleManager {
 	public ScheduleEntry getSelection() {
 		return this.selectedEntry;
 	}
-	
 }
