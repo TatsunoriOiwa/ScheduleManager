@@ -28,7 +28,7 @@ public class FuzzyDate implements Cloneable {
 	
 	
 	public FuzzyDate loadFromJsonObj(JsonObject eobj) {
-		if (eobj.has("year")) { this.setYear(eobj.get("year").getAsInt());
+		if (eobj.has("year")) { this.setYear((eobj.get("year").getAsInt() % 100) + 2000);
 		if (eobj.has("month")) { this.setMonth(EnumMonth.fromIndex(eobj.get("month").getAsInt()));
 		if (eobj.has("day")) { this.setDay(eobj.get("day").getAsInt());
 		if (eobj.has("time")) { this.setTime(eobj.get("time").getAsInt());
@@ -135,7 +135,7 @@ public class FuzzyDate implements Cloneable {
 			}
 			this.day = day;
 		} else {
-			int year = this.hasYear() ? 2000 + this.getYear() : now.getYear(); // 仮？
+			int year = this.hasYear() ? this.getYear() : now.getYear(); // 仮？
 			Month month = now.getMonth(); // 仮
 			if (day > month.length(Year.isLeap(year))) { // Never be true in December.
 				month = month.plus(1);
@@ -183,7 +183,7 @@ public class FuzzyDate implements Cloneable {
 		if (hour < 0 || hour >= 24 || min < 0 || min >= 60) { return false; }
 		if (!this.hasDay()) {
 			LocalDateTime now = TimeDateUtil.getCurrentDateTime();
-			int year = this.hasYear() ? 2000 + this.getYear() : now.getYear();
+			int year = this.hasYear() ? this.getYear() : now.getYear();
 			EnumMonth month = this.hasMonth() ? this.getMonth() : EnumMonth.fromIndex(now.getMonthValue());
 			int day = this.hasDay() ? this.getDay() : now.getDayOfMonth();
 			LocalDateTime nnow = LocalDateTime.of(year, month.getMonth(), now.getDayOfMonth(), now.getHour(), now.getMinute());
