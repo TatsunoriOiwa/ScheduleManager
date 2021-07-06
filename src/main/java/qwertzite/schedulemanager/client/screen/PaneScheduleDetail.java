@@ -429,7 +429,7 @@ public class PaneScheduleDetail extends Composite {
 				ScheduleManager.INSTANCE.onDateChanged(this);
 				return;
 			} else {
-				int year = Integer.valueOf(str);
+				int year = Integer.valueOf(str) + 2000;
 				if (year == this.entry.getYear()) { return; }
 				if (this.entry.setYear(year)) {
 					this.yearField.setForeground(SWTResourceManager.getColor(SWT.COLOR_BLACK));
