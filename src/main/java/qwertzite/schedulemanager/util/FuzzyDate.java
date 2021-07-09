@@ -28,7 +28,10 @@ public class FuzzyDate implements Cloneable {
 	
 	
 	public FuzzyDate loadFromJsonObj(JsonObject eobj) {
-		if (eobj.has("year")) { this.setYear((eobj.get("year").getAsInt() % 100) + 2000);
+		if (eobj.has("year")) { 
+			int y= eobj.get("year").getAsInt();
+			if (y >= 0) y = (y % 100) + 2000;
+			this.setYear(y);
 		if (eobj.has("month")) { this.setMonth(EnumMonth.fromIndex(eobj.get("month").getAsInt()));
 		if (eobj.has("day")) { this.setDay(eobj.get("day").getAsInt());
 		if (eobj.has("time")) { this.setTime(eobj.get("time").getAsInt());
